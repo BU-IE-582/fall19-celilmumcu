@@ -1,0 +1,516 @@
+---
+title: "IE_582_HW3_CelilMumcu"
+output: html_document
+---
+
+```{r }
+library(CRANsearcher)
+library(MASS)
+library(ggplot2)
+library(data.table)
+library(readxl)
+```
+
+## View(ConsumptionData)
+
+```{r }
+ConsumptionData <- read_excel("/Users/ASUS/Documents/GercekZamanliTuketim-01012016-29112019.xls")
+##View(ConsumptionData)
+```
+
+```{r }
+str(ConsumptionData)
+```
+
+## MAPE percentage error calculation, smaller MAPE means better forecast
+
+```{r }
+MAPE <- function(actual, forecast){
+  maperesult= sum((abs(actual-forecast)/actual)*100)/length(actual)
+  return(maperesult)
+}
+```
+
+```{r }
+length(ConsumptionData$Consumption)
+```
+
+```{r }
+trainingdata= ConsumptionData[1:(length(ConsumptionData$Consumption)-29*24),]
+testingdata= ConsumptionData[(length(ConsumptionData$Consumption)-29*24+1):34262,]
+```
+
+## there is no consumption value in the some hours of last day, to prevent the conflict i wrote 34262 manually.
+
+```{r }
+## View(testingdata)
+## View(trainingdata)
+MAPE48= MAPE(testingdata$Consumption,testingdata$Lag_48)
+MAPE48
+```
+
+```{r }
+MAPE168= MAPE(testingdata$Consumption,testingdata$Lag_168)
+MAPE168
+```
+
+## in the Lag_48 and Lag_168 columns there are missing values naturally, i will omit first 168 row to make the table without NA value to prevent problems in regressions
+##View(trainingdata)
+
+```{r }
+trainingdataclear= trainingdata[169:length(trainingdata$Consumption),]
+##View(trainingdataclear)
+```
+
+## for the second part, i am going to try to create a linear regression by taking two requested features into account as time series analysis
+
+```{r }
+LinearRegressionModel= lm(Consumption~ Lag_48 + Lag_168, trainingdataclear)
+summary(LinearRegressionModel)
+```
+
+```{r }
+ForecastLinearRegressionModel= predict(LinearRegressionModel, testingdata)
+MAPEpartB= MAPE(testingdata$Consumption, ForecastLinearRegressionModel)
+MAPEpartB
+```
+
+## View(trainingdataclear) 33408 rows 33408/24= 1392 days
+## View(testingdata) 686 rows but last 14 days doesnt make a total day, so (686-14)/24= 28 whole days + 14 hours
+## for the third part, every consecutive 24 hours sum up the one day interval, (it begins at 00:00 finishes at 23:00 for training)
+## i took different types of errors i dont know why, that's why i assigned hourly data via a long way as below:
+## i'll train linear regression models for each hour using the same training period
+
+```{r }
+for(i in 1:1392) {
+  trainingdataHourzero= trainingdataclear[1+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHourzero[i,]= trainingdataclear[1+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour1= trainingdataclear[2+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour1[i,]= trainingdataclear[2+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour2= trainingdataclear[3+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour2[i,]= trainingdataclear[3+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour3= trainingdataclear[4+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour3[i,]= trainingdataclear[4+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour4= trainingdataclear[5+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour4[i,]= trainingdataclear[5+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour5= trainingdataclear[6+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour5[i,]= trainingdataclear[6+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour6= trainingdataclear[7+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour6[i,]= trainingdataclear[7+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour7= trainingdataclear[8+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour7[i,]= trainingdataclear[8+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour8= trainingdataclear[9+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour8[i,]= trainingdataclear[9+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour9= trainingdataclear[10+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour9[i,]= trainingdataclear[10+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour10= trainingdataclear[11+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour10[i,]= trainingdataclear[11+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour11= trainingdataclear[12+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour11[i,]= trainingdataclear[12+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour12= trainingdataclear[13+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour12[i,]= trainingdataclear[13+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour13= trainingdataclear[14+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour13[i,]= trainingdataclear[14+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour14= trainingdataclear[15+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour14[i,]= trainingdataclear[15+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour15= trainingdataclear[16+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour15[i,]= trainingdataclear[16+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour16= trainingdataclear[17+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour16[i,]= trainingdataclear[17+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour17= trainingdataclear[18+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour17[i,]= trainingdataclear[18+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour18= trainingdataclear[19+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour18[i,]= trainingdataclear[19+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour19= trainingdataclear[20+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour19[i,]= trainingdataclear[20+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour20= trainingdataclear[21+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour20[i,]= trainingdataclear[21+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour21= trainingdataclear[22+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour21[i,]= trainingdataclear[22+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour22= trainingdataclear[23+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour22[i,]= trainingdataclear[23+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour23= trainingdataclear[24+24*(i-1),]
+}
+for(i in 1:1392) {
+  trainingdataHour23[i,]= trainingdataclear[24+24*(i-1),]
+}
+```
+
+##for testing Hours
+
+```{r }
+for(i in 1:29) {
+  testingdataHourzero= testingdata[1+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHourzero[i,]= testingdata[1+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour1= testingdata[2+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour1[i,]= testingdata[2+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour2= testingdata[3+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour2[i,]= testingdata[3+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour3= testingdata[4+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour3[i,]= testingdata[4+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour4= testingdata[5+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour4[i,]= testingdata[5+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour5= testingdata[6+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour5[i,]= testingdata[6+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour6= testingdata[7+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour6[i,]= testingdata[7+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour7= testingdata[8+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour7[i,]= testingdata[8+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour8= testingdata[9+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour8[i,]= testingdata[9+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour9= testingdata[10+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour9[i,]= testingdata[10+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour10= testingdata[11+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour10[i,]= testingdata[11+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour11= testingdata[12+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour11[i,]= testingdata[12+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour12= testingdata[13+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour12[i,]= testingdata[13+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour13= testingdata[14+24*(i-1),]
+}
+for(i in 1:29) {
+  testingdataHour13[i,]= testingdata[14+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour14= testingdata[15+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour14[i,]= testingdata[15+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour15= testingdata[16+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour15[i,]= testingdata[16+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour16= testingdata[17+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour16[i,]= testingdata[17+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour17= testingdata[17+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour17[i,]= testingdata[17+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour18= testingdata[18+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour18[i,]= testingdata[18+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour19= testingdata[19+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour19[i,]= testingdata[19+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour20= testingdata[20+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour20[i,]= testingdata[20+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour21= testingdata[21+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour21[i,]= testingdata[21+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour22= testingdata[22+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour22[i,]= testingdata[22+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour23= testingdata[23+24*(i-1),]
+}
+for(i in 1:28) {
+  testingdataHour23[i,]= testingdata[23+24*(i-1),]
+}
+```
+
+```{r }
+LinearRegressionModelHourzero= lm(Consumption~ Lag_48 + Lag_168, trainingdataHourzero)
+summary(LinearRegressionModelHourzero)
+```
+
+```{r }
+ForecastLinearRegressionModelHourzero= predict(LinearRegressionModelHourzero, testingdataHourzero)
+MAPEHourzero= MAPE(testingdataHourzero$Consumption, ForecastLinearRegressionModelHourzero)
+```
+
+```{r }
+LinearRegressionModelHour1= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour1)
+summary(LinearRegressionModelHour1)
+ForecastLinearRegressionModelHour1= predict(LinearRegressionModelHour1, testingdataHour1)
+MAPEHour1= MAPE(testingdataHour1$Consumption, ForecastLinearRegressionModelHour1)
+
+LinearRegressionModelHour2= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour2)
+summary(LinearRegressionModelHour2)
+ForecastLinearRegressionModelHour2= predict(LinearRegressionModelHour2, testingdataHour2)
+MAPEHour2= MAPE(testingdataHour2$Consumption, ForecastLinearRegressionModelHour2)
+
+LinearRegressionModelHour3= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour3)
+summary(LinearRegressionModelHour3)
+ForecastLinearRegressionModelHour3= predict(LinearRegressionModelHour3, testingdataHour3)
+MAPEHour3= MAPE(testingdataHour3$Consumption, ForecastLinearRegressionModelHour3)
+
+LinearRegressionModelHour4= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour4)
+summary(LinearRegressionModelHour4)
+ForecastLinearRegressionModelHour4= predict(LinearRegressionModelHour4, testingdataHour4)
+MAPEHour4= MAPE(testingdataHour4$Consumption, ForecastLinearRegressionModelHour4)
+
+LinearRegressionModelHour5= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour5)
+summary(LinearRegressionModelHour5)
+ForecastLinearRegressionModelHour5= predict(LinearRegressionModelHour5, testingdataHour5)
+MAPEHour5= MAPE(testingdataHour5$Consumption, ForecastLinearRegressionModelHour5)
+
+LinearRegressionModelHour6= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour6)
+summary(LinearRegressionModelHour6)
+ForecastLinearRegressionModelHour6= predict(LinearRegressionModelHour6, testingdataHour6)
+MAPEHour6= MAPE(testingdataHour6$Consumption, ForecastLinearRegressionModelHour6)
+
+LinearRegressionModelHour7= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour7)
+summary(LinearRegressionModelHour7)
+ForecastLinearRegressionModelHour7= predict(LinearRegressionModelHour7, testingdataHour7)
+MAPEHour7= MAPE(testingdataHour7$Consumption, ForecastLinearRegressionModelHour7)
+
+LinearRegressionModelHour8= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour8)
+summary(LinearRegressionModelHour8)
+ForecastLinearRegressionModelHour8= predict(LinearRegressionModelHour8, testingdataHour8)
+MAPEHour8= MAPE(testingdataHour8$Consumption, ForecastLinearRegressionModelHour8)
+
+LinearRegressionModelHour9= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour9)
+summary(LinearRegressionModelHour9)
+ForecastLinearRegressionModelHour9= predict(LinearRegressionModelHour9, testingdataHour9)
+MAPEHour9= MAPE(testingdataHour9$Consumption, ForecastLinearRegressionModelHour9)
+
+LinearRegressionModelHour10= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour10)
+summary(LinearRegressionModelHour10)
+ForecastLinearRegressionModelHour10= predict(LinearRegressionModelHour10, testingdataHour10)
+MAPEHour10= MAPE(testingdataHour10$Consumption, ForecastLinearRegressionModelHour10)
+
+LinearRegressionModelHour11= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour11)
+summary(LinearRegressionModelHour11)
+ForecastLinearRegressionModelHour11= predict(LinearRegressionModelHour11, testingdataHour11)
+MAPEHour11= MAPE(testingdataHour11$Consumption, ForecastLinearRegressionModelHour11)
+
+LinearRegressionModelHour12= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour12)
+summary(LinearRegressionModelHour12)
+ForecastLinearRegressionModelHour12= predict(LinearRegressionModelHour12, testingdataHour12)
+MAPEHour12= MAPE(testingdataHour12$Consumption, ForecastLinearRegressionModelHour12)
+
+LinearRegressionModelHour13= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour13)
+summary(LinearRegressionModelHour13)
+ForecastLinearRegressionModelHour13= predict(LinearRegressionModelHour13, testingdataHour13)
+MAPEHour13= MAPE(testingdataHour13$Consumption, ForecastLinearRegressionModelHour13)
+
+LinearRegressionModelHour14= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour14)
+summary(LinearRegressionModelHour14)
+ForecastLinearRegressionModelHour14= predict(LinearRegressionModelHour14, testingdataHour14)
+MAPEHour14= MAPE(testingdataHour14$Consumption, ForecastLinearRegressionModelHour14)
+
+LinearRegressionModelHour15= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour15)
+summary(LinearRegressionModelHour15)
+ForecastLinearRegressionModelHour15= predict(LinearRegressionModelHour15, testingdataHour15)
+MAPEHour15= MAPE(testingdataHour15$Consumption, ForecastLinearRegressionModelHour15)
+
+LinearRegressionModelHour16= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour16)
+summary(LinearRegressionModelHour16)
+ForecastLinearRegressionModelHour16= predict(LinearRegressionModelHour16, testingdataHour16)
+MAPEHour16= MAPE(testingdataHour16$Consumption, ForecastLinearRegressionModelHour16)
+
+LinearRegressionModelHour17= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour17)
+summary(LinearRegressionModelHour17)
+ForecastLinearRegressionModelHour17= predict(LinearRegressionModelHour17, testingdataHour17)
+MAPEHour17= MAPE(testingdataHour17$Consumption, ForecastLinearRegressionModelHour17)
+
+LinearRegressionModelHour18= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour18)
+summary(LinearRegressionModelHour18)
+ForecastLinearRegressionModelHour18= predict(LinearRegressionModelHour18, testingdataHour18)
+MAPEHour18= MAPE(testingdataHour18$Consumption, ForecastLinearRegressionModelHour18)
+
+LinearRegressionModelHour19= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour19)
+summary(LinearRegressionModelHour19)
+ForecastLinearRegressionModelHour19= predict(LinearRegressionModelHour19, testingdataHour19)
+MAPEHour19= MAPE(testingdataHour19$Consumption, ForecastLinearRegressionModelHour19)
+
+LinearRegressionModelHour20= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour20)
+summary(LinearRegressionModelHour20)
+ForecastLinearRegressionModelHour20= predict(LinearRegressionModelHour20, testingdataHour20)
+MAPEHour20= MAPE(testingdataHour20$Consumption, ForecastLinearRegressionModelHour20)
+
+LinearRegressionModelHour21= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour21)
+summary(LinearRegressionModelHour21)
+ForecastLinearRegressionModelHour21= predict(LinearRegressionModelHour21, testingdataHour21)
+MAPEHour21= MAPE(testingdataHour21$Consumption, ForecastLinearRegressionModelHour21)
+
+LinearRegressionModelHour22= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour22)
+summary(LinearRegressionModelHour22)
+ForecastLinearRegressionModelHour22= predict(LinearRegressionModelHour22, testingdataHour22)
+MAPEHour22= MAPE(testingdataHour22$Consumption, ForecastLinearRegressionModelHour22)
+
+LinearRegressionModelHour23= lm(Consumption~ Lag_48 + Lag_168, trainingdataHour23)
+summary(LinearRegressionModelHour23)
+ForecastLinearRegressionModelHour23= predict(LinearRegressionModelHour23, testingdataHour23)
+MAPEHour23= MAPE(testingdataHour23$Consumption, ForecastLinearRegressionModelHour23)
+```
+
+```{r }
+MEANofMAPESHourly= mean(MAPEHourzero,MAPEHour1,MAPEHour2,MAPEHour3,MAPEHour4,MAPEHour5,MAPEHour6,MAPEHour7,MAPEHour8,MAPEHour9,MAPEHour10,MAPEHour11,MAPEHour12,MAPEHour13,MAPEHour14,MAPEHour15,MAPEHour16,MAPEHour17,MAPEHour18,MAPEHour19,MAPEHour20,MAPEHour21,MAPEHour22,MAPEHour23)
+MEANofMAPESHourly
+```
+
+## for the part f, i drew the boxplots of MAPES as follows: Smaller MAPE means smaller error in forecasting. So, LÝnearRegressionHourly gave the smallest MAPE which is 2,932 among MAPEs(it is the mean of 24 distinct hour models). When we take hourly seasonality into account, the error is decreased.
+
+```{r }
+boxplot(MAPE48,MAPE168,MAPEpartB,MEANofMAPESHourly, main= "MAPEs", names = c("Lag48","Lag168","LinReg","LRegHour"))
+```
