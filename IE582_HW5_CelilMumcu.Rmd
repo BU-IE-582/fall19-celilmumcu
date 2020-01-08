@@ -1,0 +1,46 @@
+---
+title: "HW5_CelilMumcu"
+output: html_document
+---
+## R Markdown
+
+```{r }
+rm(list = ls())
+uWaveGestureLibrary_X_TRAIN <- read.table("~/uWaveGestureLibrary_X_TRAIN", quote="\"", comment.char="")
+##View(uWaveGestureLibrary_X_TRAIN)
+uWaveGestureLibrary_Y_TRAIN <- read.table("~/uWaveGestureLibrary_Y_TRAIN", quote="\"", comment.char="")
+##View(uWaveGestureLibrary_Y_TRAIN)
+uWaveGestureLibrary_Z_TRAIN <- read.table("~/uWaveGestureLibrary_Z_TRAIN", quote="\"", comment.char="")
+##View(uWaveGestureLibrary_Z_TRAIN)
+
+uWaveGestureLibrary_X_TEST <- read.table("~/uWaveGestureLibrary_X_TEST", quote="\"", comment.char="")
+##View(uWaveGestureLibrary_X_TEST)
+uWaveGestureLibrary_Y_TEST <- read.table("~/uWaveGestureLibrary_Y_TEST", quote="\"", comment.char="")
+##View(uWaveGestureLibrary_Y_TEST)
+uWaveGestureLibrary_Z_TEST <- read.table("~/uWaveGestureLibrary_Z_TEST", quote="\"", comment.char="")
+##View(uWaveGestureLibrary_Z_TEST)
+```
+
+```{r }
+##install.packages("scatterplot3d")
+library(scatterplot3d)
+```
+
+```{r }
+X_train_Data = uWaveGestureLibrary_X_TRAIN[,-1]
+##X_train_Data
+Y_train_Data = uWaveGestureLibrary_Y_TRAIN[,-1]
+Z_train_Data = uWaveGestureLibrary_Z_TRAIN[,-1]
+
+X_test_Data = uWaveGestureLibrary_X_TEST[,-1]
+Y_test_Data = uWaveGestureLibrary_Y_TEST[,-1]
+Z_test_Data = uWaveGestureLibrary_Z_TEST[,-1]
+
+classofdata = uWaveGestureLibrary_X_TRAIN[,1]
+```
+
+##I get error in the codes below. I tried, but could not find another way to solve the rest.
+```{r }
+## classofdata1 = which(class == 1) [[1]]
+## classofdata2 = which(class == 2) [[1]]
+```
